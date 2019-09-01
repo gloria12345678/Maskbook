@@ -42,7 +42,7 @@ export interface SocialNetworkWorkerAndUI {
     /**
      * This provider is not ready for production, Maskbook will not use it in production
      */
-    notReadyForProduction?: boolean
+    isTesting?: boolean
 }
 /**
  * Users settings about Maskbook

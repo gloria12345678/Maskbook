@@ -269,7 +269,7 @@ export function defineSocialNetworkUI(UI: SocialNetworkUI) {
     if (UI.acceptablePayload.includes('v40') && UI.internalName !== 'facebook') {
         throw new TypeError('Payload version v40 is not supported in this network. Please use v39 or newer.')
     }
-    if (UI.notReadyForProduction) {
+    if (UI.isTesting) {
         if (process.env.NODE_ENV === 'production') return UI
     }
     definedSocialNetworkUIs.add(UI)
