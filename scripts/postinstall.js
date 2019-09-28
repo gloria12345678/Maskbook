@@ -27,3 +27,17 @@ process.chdir(base)
         await spawn('yarn', ['build:rollup'])
     }
 })()
+
+// Pika postinstall
+const files = {
+    'webcrypto-liner/dist/webcrypto-liner.shim.js': 'webcrypto-liner.shim.js',
+}
+const fs = require('fs')
+const esm_dist = path.join(base, './esm-dist/')
+const polyfills = path.join(esm_dist, './polyfills/')
+if (!fs.existsSync(esm_dist)) fs.mkdirSync(esm_dist)
+if (!fs.existsSync(polyfills)) fs.mkdirSync(polyfills)
+for (const [source, dest] of Object.entries(files)) {
+    const polyfillPath = path.join(polyfills, dest)
+    fs.copyFileSync(require.resolve(source), polyfillPath)
+}

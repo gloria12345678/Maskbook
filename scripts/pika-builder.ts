@@ -1,13 +1,16 @@
 import * as ts from 'typescript'
+import * as fs from 'fs'
 
-const printer = ts.createPrinter({})
+const preTransformTable = new Map<string, string>()
+preTransformTable.set('@holoflows/kit/es', '@holoflows/kit')
+preTransformTable.set('webcrypto-liner/dist/webcrypto-liner.shim.js', '/polyfills/webcrypto-liner.shim.js')
 export default function(program: ts.Program, pluginOptions: {}) {
     return (ctx: ts.TransformationContext) => {
         return (sourceFile: ts.SourceFile) => {
             function visitor(node: ts.Node): ts.Node {
                 if (ts.isImportDeclaration(node)) {
                     // transform `import ... from '...'
-                    const newPath = rewriteImport((node.moduleSpecifier as ts.StringLiteral).text)
+                    const newPath = rewriteImport((node.moduleSpecifier as ts.StringLiteral).text, sourceFile.fileName)
                     return ts.createImportDeclaration(
                         node.decorators,
                         node.modifiers,
@@ -17,7 +20,7 @@ export default function(program: ts.Program, pluginOptions: {}) {
                 } else if (ts.isExportDeclaration(node)) {
                     // transform `export ... from '...'`
                     if (!node.moduleSpecifier) return node
-                    const newPath = rewriteImport((node.moduleSpecifier as ts.StringLiteral).text)
+                    const newPath = rewriteImport((node.moduleSpecifier as ts.StringLiteral).text, sourceFile.fileName)
                     return ts.createExportDeclaration(
                         node.decorators,
                         node.modifiers,
@@ -40,15 +43,25 @@ function getWebDependencyName(dep: string) {
     return dep.replace(/\.js$/, '')
 }
 
-function rewriteImport(imp: string, dir = 'web_modules', shouldAddMissingExtension = true): string {
-    const isSourceImport = imp.startsWith('/') || imp.startsWith('.') || imp.startsWith('\\')
-    const isRemoteImport = imp.startsWith('http://') || imp.startsWith('https://')
+function rewriteImport(imp: string, currentFilePath: string, dir = 'web_modules'): string {
+    if (preTransformTable.has(imp)) imp = preTransformTable.get(imp)!
+    const isSourceImport = imp.startsWith('.') || imp.startsWith('\\')
+    const isRemoteImport = imp.startsWith('http://') || imp.startsWith('https://') || imp.startsWith('/')
     if (!isSourceImport && !isRemoteImport) {
-        console.log('Rewriting', imp, 'to', path.posix.join('/', dir, `${getWebDependencyName(imp)}.js`))
         return path.posix.join('/', dir, `${getWebDependencyName(imp)}.js`)
     }
-    if (!isRemoteImport && shouldAddMissingExtension && !path.extname(imp)) {
-        return imp + '.js'
-    }
+    const fullPath = path.join(path.dirname(currentFilePath), imp)
+    try {
+        if (fs.existsSync(fullPath + '.js') || fs.existsSync(fullPath + '.ts') || fs.existsSync(fullPath + '.tsx'))
+            return imp + '.js'
+    } catch {}
+    try {
+        if (
+            fs.existsSync(fullPath + '/index.js') ||
+            fs.existsSync(fullPath + '/index.ts') ||
+            fs.existsSync(fullPath + '/index.tsx')
+        )
+            return imp + '/index.js'
+    } catch {}
     return imp
 }

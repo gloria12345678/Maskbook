@@ -21,10 +21,12 @@
     "build:firefox": "react-app-rewired build --firefox",
     "build:chromium": "react-app-rewired build --chromium",
     "build:ios": "react-app-rewired build --wk-webview",
+    "build:pika": "ttsc -p tsconfig_pika.json",
     "test": "react-app-rewired test",
     "storybook": "start-storybook -p 9009 -s public --quiet",
     "storybook-build": "build-storybook -s public --quiet",
     "install": "node scripts/postinstall.js",
+    "install:pika": "pika-web --dest ./esm-dist/web_modules/",
     "uninstall": "node scripts/postinstall.js",
     "lint": "node scripts/lint.js",
     "lint:report": "node scripts/lint.js --reportOnly"
@@ -78,6 +80,9 @@
     "webextension-polyfill": "^0.4.0",
     "webpack-web-ext-plugin": "github:DimensionDev/webpack-web-ext-plugin"
   },
+  "@pika/web": {
+    "webDependencies": ["elliptic"]
+  },
   "devDependencies": {
     "@babel/core": "^7.4.3",
     "@pika/web": "^0.6.1",
@@ -109,16 +114,8 @@
     "yargs": "^14.0.0"
   },
   "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "production": [">0.2%", "not dead", "not op_mini all"],
+    "development": ["last 1 chrome version", "last 1 firefox version", "last 1 safari version"]
   },
   "husky": {
     "hooks": {
@@ -127,9 +124,6 @@
     }
   },
   "lint-staged": {
-    "*.{ts,tsx,js,jsx}": [
-      "node scripts/lint.js",
-      "git add"
-    ]
+    "*.{ts,tsx,js,jsx}": ["node scripts/lint.js", "git add"]
   }
 }
