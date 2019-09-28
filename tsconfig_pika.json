@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json.schemastore.org/tsconfig",
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "jsx": "react",
+    "isolatedModules": false,
+    "plugins": [{ "transform": "./scripts/pika-builder.ts", "after": true }],
+    "incremental": true,
+    "outDir": "./esm-dist/",
+    "noEmit": false
+  }
+}

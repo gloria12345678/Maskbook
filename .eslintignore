@@ -3,5 +3,8 @@ package.json
 package-lock.json
 build/
 dist/
+esm-dist/
 public/polyfill
 src/polyfill
+web_modules/
+scripts/*.ts

@@ -6,6 +6,7 @@
 public/polyfill
 # dependencies
 /node_modules
+web_modules
 /.pnp
 .pnp.js
 
@@ -19,6 +20,7 @@ public/polyfill
 /build
 /dist
 /storybook-static
+/esm-dist
 
 # misc
 .DS_Store

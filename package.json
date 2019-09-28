@@ -14,7 +14,6 @@
     "start:chromium": "react-app-rewired start --chromium",
     "start:gecko": "react-app-rewired start --firefox-gecko",
     "start:ios": "react-app-rewired start --wk-webview",
-
     "build": "react-app-rewired build",
     "build:base": "react-app-rewired build",
     "build:debugging": "node --inspect-brk node_modules/react-app-rewired/scripts/build.js",
@@ -22,15 +21,11 @@
     "build:firefox": "react-app-rewired build --firefox",
     "build:chromium": "react-app-rewired build --chromium",
     "build:ios": "react-app-rewired build --wk-webview",
-
     "test": "react-app-rewired test",
-
     "storybook": "start-storybook -p 9009 -s public --quiet",
     "storybook-build": "build-storybook -s public --quiet",
-
     "install": "node scripts/postinstall.js",
     "uninstall": "node scripts/postinstall.js",
-
     "lint": "node scripts/lint.js",
     "lint:report": "node scripts/lint.js --reportOnly"
   },
@@ -85,6 +80,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.4.3",
+    "@pika/web": "^0.6.1",
     "@storybook/addon-actions": "^5.1.0-rc.1",
     "@storybook/addon-info": "^5.2.1",
     "@storybook/addon-knobs": "^5.1.0-rc.1",
@@ -107,13 +103,22 @@
     "react-devtools": "^4.1.0",
     "storybook-addon-material-ui": "^0.9.0-alpha.19",
     "ts-node": "^8.4.1",
+    "ttypescript": "^1.5.7",
     "web-ext": "^3.1.1",
-    "yargs": "^14.0.0",
-    "webpack-extension-manifest-plugin": "^0.5.0"
+    "webpack-extension-manifest-plugin": "^0.5.0",
+    "yargs": "^14.0.0"
   },
   "browserslist": {
-    "production": [">0.2%", "not dead", "not op_mini all"],
-    "development": ["last 1 chrome version", "last 1 firefox version", "last 1 safari version"]
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   },
   "husky": {
     "hooks": {
@@ -122,6 +127,9 @@
     }
   },
   "lint-staged": {
-    "*.{ts,tsx,js,jsx}": ["node scripts/lint.js", "git add"]
+    "*.{ts,tsx,js,jsx}": [
+      "node scripts/lint.js",
+      "git add"
+    ]
   }
 }
