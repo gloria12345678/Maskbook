@@ -31,6 +31,7 @@ process.chdir(base)
 // Pika postinstall
 const files = {
     'webcrypto-liner/dist/webcrypto-liner.shim.js': 'webcrypto-liner.shim.js',
+    'gun/gun.min.js': 'gun.min.js',
 }
 const fs = require('fs')
 const esm_dist = path.join(base, './esm-dist/')

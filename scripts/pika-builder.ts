@@ -4,6 +4,10 @@ import * as fs from 'fs'
 const preTransformTable = new Map<string, string>()
 preTransformTable.set('@holoflows/kit/es', '@holoflows/kit')
 preTransformTable.set('webcrypto-liner/dist/webcrypto-liner.shim.js', '/polyfills/webcrypto-liner.shim.js')
+preTransformTable.set('gun', '/polyfills/gun.min.js')
+preTransformTable.set('gun/gun', '/polyfills/gun.min.js')
+preTransformTable.set('tiny-secp256k1', 'tiny-secp256k1/js.js')
+preTransformTable.set('serialijse', 'serialijse/dist/serialijse.bundle.min.js')
 export default function(program: ts.Program, pluginOptions: {}) {
     return (ctx: ts.TransformationContext) => {
         return (sourceFile: ts.SourceFile) => {
@@ -51,6 +55,10 @@ function rewriteImport(imp: string, currentFilePath: string, dir = 'web_modules'
         return path.posix.join('/', dir, `${getWebDependencyName(imp)}.js`)
     }
     const fullPath = path.join(path.dirname(currentFilePath), imp)
+    if (path.extname(fullPath) === '.json') {
+        if (fs.existsSync(fullPath))
+            return 'data:application/javascript,export default ' + fs.readFileSync(fullPath, 'utf-8')
+    }
     try {
         if (fs.existsSync(fullPath + '.js') || fs.existsSync(fullPath + '.ts') || fs.existsSync(fullPath + '.tsx'))
             return imp + '.js'
